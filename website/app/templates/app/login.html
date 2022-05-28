@@ -2,16 +2,41 @@
 
 {% block content %}
     <p></p>
-    <h1 class="text-center pb-5 mt-5">{{title}}</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-8 col-md-6 m-auto"></div>
+                <div class="card border-0 shadow">
+                    <div class="card-body">
+                        <form action="{%url 'login'%}" method="POST">
+                            {% csrf_token %}
+                            <div class="text-center">
+                                <h3 class="pt-3 pb-4">Авторизация</h3>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-workspace mx-auto" viewBox="0 0 16 16">
+                                  <path d="M4 16s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H4Zm4-5.95a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                                  <path d="M2 1a2 2 0 0 0-2 2v9.5A1.5 1.5 0 0 0 1.5 14h.653a5.373 5.373 0 0 1 1.066-2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v9h-2.219c.554.654.89 1.373 1.066 2h.653a1.5 1.5 0 0 0 1.5-1.5V3a2 2 0 0 0-2-2H2Z"/>
+                                </svg>
+                            </div>
 
-    <form method="POST" class="pb-3">
-        {% csrf_token %}
-        {{form.as_p}}
-        <div class="mb-4">
-            {% for message in messages %}
-                {{message}}
-            {% endfor %}
+                            <input class="form-control my-3 py-3" type="email" name="email" placeholder="Email">
+                            <input class="form-control my-3 py-3" type="password" name="password" placeholder="Password">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-secondary">Войти</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <p><button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Submit</button></p>
-    </form>
+    </div>
+
+<!--    <form method="POST" class="pb-3">-->
+<!--        {% csrf_token %}-->
+<!--        {{form.as_p}}-->
+<!--        <div class="mb-4">-->
+<!--            {% for message in messages %}-->
+<!--                {{message}}-->
+<!--            {% endfor %}-->
+<!--        </div>-->
+<!--        <p><button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Submit</button></p>-->
+<!--    </form>-->
 {% endblock %}

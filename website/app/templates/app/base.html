@@ -16,32 +16,47 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             {% for m in menu %}
-            <li class="nav-item">
-                <a class=nav-link href="{% url m.url_name %}">{{ m.title }}</a>
-            </li>
+                <li class="nav-item">
+                    <a class=nav-link href="{% url m.url_name %}">{{ m.title }}</a>
+                </li>
             {% endfor %}
         </ul>
         <ul class="navbar-nav ms-md-auto">
-        {% if request.user.is_authenticated %}
+            {% if request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class=nav-link href="{% url 'login' %}">Выйти</a>
+                    <a class=nav-link href="{% url 'logout' %}">{{request.user.username}} | Выйти</a>
                 </li>
-        {% else %}
-            <li class="nav-item">
-                <a class=nav-link href="{% url 'login' %}">Войти</a>
-            </li>
-            <li class="nav-item">
-                <a class=nav-link href="{% url 'login' %}">Регистрация</a>
-            </li>
-        {% endif %}
+            {% else %}
+                <li class="nav-item">
+                    <a class=nav-link href="{% url 'login' %}">Войти</a>
+                </li>
+                <li class="nav-item">
+                    <a class=nav-link href="{% url 'register' %}">Регистрация</a>
+                </li>
+            {% endif %}
         </ul>
     </div>
   </div>
 </nav>
 <div class="container-xxl my-md-4 bd-layout">
-    <main class="bd-intro ps-lg-4 mt-2">
-        {% block content %}
-        {% endblock %}
+    <main class="bd-intro mt-2">
+        <div class="row">
+            <div class="col-sm-3">
+                <nav class="nav nav-pills nav-link">
+                    {% for c in cats %}
+                        {% if c.pk == cat_selected %}
+                                <a class="nav-link active" aria-current="page" href="{{ c.get_absolute_url }}">{{c.name}}</a>
+                        {% else %}
+                                <a class="nav-link" href="{{ c.get_absolute_url }}">{{c.name}}</a>
+                        {% endif %}
+                    {% endfor %}
+                </nav>
+            </div>
+            <div class="col-sm-9">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
     </main>
 </div>
 <nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-dark">

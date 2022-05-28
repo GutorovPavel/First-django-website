@@ -1,34 +1,18 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-sm-3">
-            <nav class="nav nav-pills nav-link">
-                {% for c in cats %}
-                    {% if c.pk == cat_selected %}
-                            <a class="nav-link active" aria-current="page" href="{{ c.get_absolute_url }}">{{c.name}}</a>
-                    {% else %}
-                            <a class="nav-link" href="{{ c.get_absolute_url }}">{{c.name}}</a>
-                    {% endif %}
-                {% endfor %}
-            </nav>
-        </div>
-        <div class="col-sm-9">
-            {% for a in artists %}
-            <div class="card">
-                <img src="{{a.image.url}}" class="card-img-top" >
+    {% for a in artists %}
+    <div class="card border-0 shadow">
+        <img src="{{a.image.url}}" class="card-img-top" >
 
-                <div class="card-body">
-                    <h3 class="card-title">{{a.nick}} ({{a.name}})</h3>
-                    <p class="card-text">{{a.content}}</p>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{{a.get_absolute_url}}" class="btn btn-secondary">Читать</a>
-                    </div>
-                </div>
-            </div>
-            <p></p>
-            {% endfor %}
+        <div class="card-body">
+            <h3 class="card-title">{{a.nick}} ({{a.name}})</h3>
+            <p class="card-text">{{a.content}}</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{{a.get_absolute_url}}" class="btn btn-secondary">Читать</a>
             </div>
         </div>
     </div>
+    <p></p>
+    {% endfor %}
 {% endblock %}
