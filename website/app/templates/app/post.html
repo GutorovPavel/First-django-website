@@ -1,15 +1,17 @@
-{% extends 'app/base.html' %}
+{% extends 'app/user.html' %}
 
 {% block content %}
-  <h1>{{post.nick}} ({{post.name}})</h1>
+<div class="container mt-3">
+    <div class="card border-0 shadow">
+        <img src="{{post.image.url}}" class="card-img-top" >
 
-  {% if post.image %}
-  <img src="{{post.image.url}}">
-  {% endif %}
-
-  {{post.content}}
-
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <a href="{% url 'index' %}" class="btn btn-secondary" role="button" data-bs-toggle="button">Назад</a>
-  </div>
+        <div class="card-body">
+            <h3 class="card-title">{{post.nick}} ({{post.name}})</h3>
+            <p class="card-text">{{post.content}}</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'index' %}" class="btn btn-secondary" role="button" data-bs-toggle="button">Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

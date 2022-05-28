@@ -155,11 +155,6 @@ class Register(DataMixin, CreateView):
         context.update(c_def)
         return context
 
-    def form_valid(self, form):
-        user = form.save()
-        login(self.request, user)
-        return redirect('index')
-
 
 class Login(DataMixin, LoginView):
     form_class = LoginForm
@@ -172,9 +167,15 @@ class Login(DataMixin, LoginView):
         return context
 
     def form_valid(self, form):
-        email = form.cleaned_data['email']
+        username = form.cleaned_data['username']
         password = form.cleaned_data['password']
-        return redirect('index')
+        user = authenticate(self.request, username=username, password=password)
+        if user is not None:
+            login(self.request, user)
+            return redirect('index')
+        else:
+            messages.success(self.request, 'Error, Try again')
+            return redirect('login')
 
 
 def logout_user(request):
