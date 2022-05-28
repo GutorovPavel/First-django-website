@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+    <p></p>
+    <h1 class="text-center pb-5 mt-5">{{title}}</h1>
+
+    <form action="{% url 'addpost'%}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+        <div class="mb-4">
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+        </div>
+        <p><button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Submit</button></p>
+    </form>
+{% endblock %}

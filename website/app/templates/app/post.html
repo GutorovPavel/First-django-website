@@ -1,0 +1,15 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+  <h1>{{post.nick}} ({{post.name}})</h1>
+
+  {% if post.image %}
+  <img src="{{post.image.url}}">
+  {% endif %}
+
+  {{post.content}}
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <a href="{% url 'index' %}" class="btn btn-secondary" role="button" data-bs-toggle="button">Назад</a>
+  </div>
+{% endblock %}
