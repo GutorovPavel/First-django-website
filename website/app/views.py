@@ -2,10 +2,12 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, FormView
+from hitcount.views import HitCountDetailView
 
 from .models import *
 from .forms import *
@@ -46,20 +48,29 @@ class ShowCategory(DataMixin, ListView):
         return Artist.objects.filter(category__slug=self.kwargs['category_slug'], is_published=True)
 
 
-class ShowPost(DataMixin, FormMixin, DetailView):
+class ShowPost(DataMixin, HitCountDetailView):
     model = Artist
     template_name = 'app/post.html'
     slug_url_kwarg = 'post_slug'
+    count_hit = True
+
     context_object_name = 'post'
 
-    form_class = CommentForm
+    form = CommentForm
 
-    def get_success_url(self):
-        return reverse('post', kwargs={'slug': self.object.slug})
+    def post(self, request, *args, **kwargs):
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            post = self.get_object()
+            form.instance.user = request.user
+            form.instance.post = post
+            form.save()
+
+            return redirect(reverse('post', kwargs={'post_slug': post.slug}))
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = CommentForm(initial={'post': self.object})
+        context['form'] = self.form
         c_def = self.get_user_context(title=main + context['post'].nick,
                                       comments=Comment.objects.filter(post__slug=self.kwargs['post_slug']))
         context.update(c_def)

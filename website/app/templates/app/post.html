@@ -19,12 +19,14 @@
             </div>
             <div class="col-sm-4">
                 <div class="card card-body border-0 shadow">
-                    <form method="POST">
+                    <form method="POST" action="{{post.get_absolute_url}}">
                         {% csrf_token %}
-                        {{form.as_p}}
+                        {{form}}
+                        <p></p>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-secondary">Отправить</button>
+                        </div>
                     </form>
-                    <button type="submit" class="btn btn-secondary">Отправить</button>
-
                     {% for c in comments %}
                         <h5 class="my-3">{{c.user.username}}: -{{c.content}}</h5>
                     {% endfor %}
