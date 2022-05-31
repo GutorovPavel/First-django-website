@@ -17,7 +17,28 @@ class LoginForm(AuthenticationForm):
 
 
 class AddPostForm(forms.ModelForm):
+
     class Meta:
         model = Artist
-        fields = '__all__'
+        fields = ('name', 'nick', 'image', 'content', 'category')
+
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'nick': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'content': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('content',)
+
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control'})
+        }
+
 

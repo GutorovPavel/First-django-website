@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic.edit import FormMixin
 
 from .models import *
 from .forms import *
@@ -44,20 +45,43 @@ class ShowCategory(DataMixin, ListView):
         return Artist.objects.filter(category__slug=self.kwargs['category_slug'], is_published=True)
 
 
-class ShowPost(DataMixin, DetailView):
+class ShowPost(DataMixin, FormMixin, DetailView):
     model = Artist
     template_name = 'app/post.html'
     slug_url_kwarg = 'post_slug'
     context_object_name = 'post'
 
+    form_class = CommentForm
+
+    def get_success_url(self):
+        return reverse('post', kwargs={'slug': self.object.slug})
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title=main + context['post'].nick)
+        context['form'] = CommentForm(initial={'post': self.object})
+        c_def = self.get_user_context(title=main + context['post'].nick,
+                                      comments=Comment.objects.filter(post__slug=self.kwargs['post_slug']))
         context.update(c_def)
         return context
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.post = Artist.objects.get(slug=self.kwargs['post_slug'])
+        obj.save()
+        return super().form_valid(form)
+
 
 class AddPost(DataMixin, CreateView):
+    model = Artist
     form_class = AddPostForm
     template_name = 'app/addpost.html'
     success_url = reverse_lazy('index')
@@ -67,6 +91,7 @@ class AddPost(DataMixin, CreateView):
         c_def = self.get_user_context(title=main + 'Новая статья')
         context.update(c_def)
         return context
+
 
 #
 # def index(request):
@@ -182,32 +207,6 @@ def logout_user(request):
     logout(request)
     return redirect('login')
 
-
-# def login_user(request):
-#     form = LoginForm()
-#
-#     if request.method == "POST":
-#         form = LoginForm(request.POST)
-#
-#         if form.is_valid():
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#
-#             user = authenticate(request, username=username, password=password)
-#
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect('index')
-#             else:
-#                 messages.info(request, 'Username or Password is incorrect')
-#                 return redirect('login')
-#
-#     context = {
-#         'menu': menu,
-#         'title': 'Authentication',
-#         'form': form
-#     }
-#     return render(request, 'app/login.html', context=context)
 
 
 

@@ -18,3 +18,4 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(User)
 admin.site.register(Artist, ArtistAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Comment)

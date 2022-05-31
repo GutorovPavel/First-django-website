@@ -46,3 +46,12 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('category', kwargs={'category_slug': self.slug})
 
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Artist, related_name='comments', on_delete=models.CASCADE) #when post are deleted, comments are also deleted
+    date = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(blank=True)
+
+    def __str__(self):
+        return '%s - %s' % (self.user.username, self.date)

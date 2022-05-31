@@ -9,5 +9,6 @@ urlpatterns = [
     # path('top/', index, name='top'),
     path('addpost/',  AddPost.as_view(), name='addpost'),
     path('post/<slug:post_slug>/', ShowPost.as_view(), name='post'),
+    # path('post/<slug:post_slug>/comment', AddComment.as_view(), name='comment'),
     path('category/<slug:category_slug>/', ShowCategory.as_view(), name='category')
 ]
