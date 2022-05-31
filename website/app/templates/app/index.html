@@ -13,6 +13,10 @@
                     <p class="card-text">{{a.content|linebreaks|truncatewords:25}}</p>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href="{{a.get_absolute_url}}" class="btn btn-secondary">Читать</a>
+                        {% if request.user.role == 'Editor' %}
+                        <a href="{% url 'edit' a.slug %}" class="btn btn-secondary">Изменить</a>
+                        <a href="{% url 'delete' a.slug %}" class="btn btn-secondary">Удалить</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

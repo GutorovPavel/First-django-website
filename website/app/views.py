@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -5,7 +7,7 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.views.generic.edit import FormMixin, FormView
 from hitcount.views import HitCountDetailView
 
@@ -15,6 +17,7 @@ from .utils import *
 
 # Create your views here.
 
+logger = logging.getLogger('django')
 
 class Home(DataMixin, ListView):
     model = Artist
@@ -87,6 +90,34 @@ class AddPost(DataMixin, CreateView):
         c_def = self.get_user_context(title=main + 'Новая статья')
         context.update(c_def)
         return context
+
+class UpdatePost(DataMixin, UpdateView):
+    model = Artist
+    form_class = AddPostForm
+    slug_url_kwarg = 'post_slug'
+    template_name = 'app/updatepost.html'
+    success_url = reverse_lazy('index')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title=main + 'Новая статья')
+        context.update(c_def)
+        return context
+
+
+class DeletePost(DataMixin, DeleteView):
+    model = Artist
+    slug_url_kwarg = 'post_slug'
+    template_name = 'app/deletepost.html'
+    success_url = reverse_lazy('index')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title=main + 'Новая статья')
+        context.update(c_def)
+        return context
+
+
 
 #
 # def index(request):

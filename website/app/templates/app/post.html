@@ -19,6 +19,7 @@
             </div>
             <div class="col-sm-4">
                 <div class="card card-body border-0 shadow">
+                    {% if request.user.is_authenticated %}
                     <form method="POST" action="{{post.get_absolute_url}}">
                         {% csrf_token %}
                         {{form}}
@@ -27,9 +28,15 @@
                             <button type="submit" class="btn btn-secondary">Отправить</button>
                         </div>
                     </form>
+                    <p></p>
                     {% for c in comments %}
-                        <h5 class="my-3">{{c.user.username}}: -{{c.content}}</h5>
+                        <h4 class="my-2">{{c.user.username}}: -{{c.content}}</h4>
                     {% endfor %}
+                    {% else %}
+                    <div class="text-center">
+                        <h3>Войдите в аккаунт, чтобы получить возможность комментировать записи.</h3>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
