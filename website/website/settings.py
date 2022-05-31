@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os.path
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,9 +27,10 @@ SECRET_KEY = 'django-insecure-6(zs1a_3nc6^638_f^j9xdpqrzvwelak_rabm!#rhm3vixkfkd
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '*'
+    '*',
+    'http://0.0.0.0:8000/'
+    'https://rapnews.herokuapp.com'
 ]
-
 
 # Application definition
 
@@ -78,16 +80,24 @@ WSGI_APPLICATION = 'website.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',
-        'PORT': 5432,
-    }
-}
+DATABASES = {}
+
+DATABASES['default'] = dj_database_url.config(default='postgres://ypjfirgkzvdfjv:85cbb8db1c52230f647d203ce88a7a313be8c8e8051cfb854b2239114576b1ff@ec2-34-231-221-151.compute-1.amazonaws.com:5432/dds7o3p3pr0b9')
+
+CSRF_TRUSTED_ORIGINS = ['https://rapnews.herokuapp.com']
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('POSTGRES_NAME'),
+#         'USER': os.environ.get('POSTGRES_USER'),
+#         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+#         'HOST': 'db',
+#         'PORT': 5432,
+#     }
+# }
 
 # DATABASES = {
 #     'default': {

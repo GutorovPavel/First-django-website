@@ -1,5 +1,7 @@
+import asyncio
 import logging
 
+from asgiref.sync import sync_to_async
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -19,6 +21,22 @@ from .utils import *
 
 logger = logging.getLogger('django')
 
+
+@sync_to_async
+def get_published_posts():
+    return Artist.objects.filter(is_published=True)
+
+
+@sync_to_async
+def get_category_posts(category_slug):
+    return Artist.objects.filter(category__slug=category_slug, is_published=True)
+
+
+@sync_to_async
+def get_post_comments(post_slug):
+    return Comment.objects.filter(post__slug=post_slug, user__blocked=False)
+
+
 class Home(DataMixin, ListView):
     model = Artist
     template_name = 'app/index.html'
@@ -31,7 +49,7 @@ class Home(DataMixin, ListView):
         return context
 
     def get_queryset(self):
-        return Artist.objects.filter(is_published=True)
+        return asyncio.run(get_published_posts())
 
 
 class ShowCategory(DataMixin, ListView):
@@ -48,7 +66,7 @@ class ShowCategory(DataMixin, ListView):
         return context
 
     def get_queryset(self):
-        return Artist.objects.filter(category__slug=self.kwargs['category_slug'], is_published=True)
+        return asyncio.run(get_category_posts(self.kwargs['category_slug']))
 
 
 class ShowPost(DataMixin, HitCountDetailView):
@@ -75,7 +93,7 @@ class ShowPost(DataMixin, HitCountDetailView):
         context = super().get_context_data(**kwargs)
         context['form'] = self.form
         c_def = self.get_user_context(title=main + context['post'].nick,
-                                      comments=Comment.objects.filter(post__slug=self.kwargs['post_slug']))
+                                      comments=asyncio.run(get_post_comments(self.kwargs['post_slug'])))
         context.update(c_def)
         return context
 
@@ -116,8 +134,6 @@ class DeletePost(DataMixin, DeleteView):
         c_def = self.get_user_context(title=main + 'Новая статья')
         context.update(c_def)
         return context
-
-
 
 #
 # def index(request):
