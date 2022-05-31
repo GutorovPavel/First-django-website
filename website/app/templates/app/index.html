@@ -3,13 +3,18 @@
 {% block content %}
     {% for a in artists %}
     <div class="card border-0 shadow">
-        <img src="{{a.image.url}}" class="card-img-top" >
-
-        <div class="card-body">
-            <h3 class="card-title">{{a.nick}} ({{a.name}})</h3>
-            <p class="card-text">{{a.content}}</p>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a href="{{a.get_absolute_url}}" class="btn btn-secondary">Читать</a>
+        <div class="row g-0">
+            <div class="col-md-6">
+                <img src="{{a.image.url}}" class="img-fluid rounded-start" >
+            </div>
+            <div class="col-md-6">
+                <div class="card-body">
+                    <h3 class="card-title">{{a.nick}} ({{a.name}})</h3>
+                    <p class="card-text">{{a.content|linebreaks|truncatewords:25}}</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{a.get_absolute_url}}" class="btn btn-secondary">Читать</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

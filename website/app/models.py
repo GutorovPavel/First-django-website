@@ -22,7 +22,8 @@ class User(AbstractUser):
 class Artist(models.Model):
     name = models.CharField(max_length=255)
     nick = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
+    slug = models.SlugField(max_length=60, unique=True, db_index=True,
+                            verbose_name="URL",  blank=True)
     image = models.ImageField(upload_to="photos/%Y/%m/%d")
     content = models.TextField(blank=True)
     time_create = models.DateTimeField(auto_now_add=True)
